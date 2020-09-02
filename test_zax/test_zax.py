@@ -22,7 +22,7 @@ class Loja:
     def adicionar_pedidos(self, *pedidos):
         [self.pedidos.append(pedido) for pedido in pedidos]
     
-    def calcular_comissao(self, motoboy):
+    def calcular_valor_entrega(self, motoboy):
         total_pedidos = sum(pedido.valor for pedido in self.pedidos)         
         return ((total_pedidos / 100) * self.comissao) + (len(self.pedidos) * motoboy.valor_fixo)
 
@@ -37,13 +37,14 @@ class Zax:
     def adicionar_lojas(self, *lojas):
         [self.lojas.append(loja) for loja in lojas]
         
-    def calcula_frete(self, motoboy):
-        lojas = self.lojas_que_atende(motoboy)
-        pedidos = self.qtd_pedidos(lojas, motoboy)
-        valor_frete = self.valor_frete(lojas, motoboy)
-        
-        return "lojas: {} => pedidos: {} => frete: {}".format(lojas, pedidos, valor_frete)
-                
+    def pedidos_motoboy(self, motoboy=None):
+        if motoboy:
+            lojas = self.lojas_que_atende(motoboy)
+            pedidos = self.qtd_pedidos(lojas, motoboy)
+            valor_frete = self.valor_frete(lojas, motoboy)
+            return "lojas: {} => pedidos: {} => frete: {}".format(lojas, pedidos, valor_frete)
+        return "lojas: 0 => pedidos: 0 => frete: 0"
+    
     def lojas_que_atende(self, motoboy):
         lojas = []
         for loja in self.lojas:
@@ -65,7 +66,7 @@ class Zax:
     def valor_frete(self, lojas, motoboy):
         valor = 0
         for loja in lojas:
-            valor = valor + loja.calcular_comissao(motoboy)
+            valor = valor + loja.calcular_valor_entrega(motoboy)
         return valor
 
 
@@ -100,8 +101,9 @@ loja_3.adicionar_pedidos(pedido_8, pedido_9, pedido_10)
 zax = Zax()
 zax.adicionar_lojas(loja_1, loja_2, loja_3)
 
-print(zax.calcula_frete(motoboy_1))
-print(zax.calcula_frete(motoboy_2))
-print(zax.calcula_frete(motoboy_3))
-print(zax.calcula_frete(motoboy_4))
-print(zax.calcula_frete(motoboy_5))
+
+print(zax.pedidos_motoboy(motoboy_1))
+print(zax.pedidos_motoboy(motoboy_2))
+print(zax.pedidos_motoboy(motoboy_3))
+print(zax.pedidos_motoboy(motoboy_4))
+print(zax.pedidos_motoboy(motoboy_5))
